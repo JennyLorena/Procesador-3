@@ -114,17 +114,35 @@ COMPONENT pC
 	PORT(
 		Entrada_Uc : IN std_logic_vector(5 downto 0);
 		Entrada_rF1 : IN std_logic_vector(31 downto 0);
-		Entrada_rF2 : IN std_logic_vector(31 downto 0);          
+		Entrada_rF2 : IN std_logic_vector(31 downto 0);
+		Carry : in STD_LOGIC;
 		dwr_aLu : OUT std_logic_vector(31 downto 0)
 		);
 	END COMPONENT;
-
-
-
-
+	COMPONENT PSR_Modifirer
+	PORT(
+		alu_op : IN std_logic_vector(5 downto 0);
+		alu_Resultado : IN std_logic_vector(31 downto 0);
+		reset : IN std_logic;
+		P_Crs1 : IN std_logic_vector(31 downto 0);
+		P_Crs2 : IN std_logic_vector(31 downto 0);          
+		nzvc : OUT std_logic_vector(3 downto 0)
+		);
+	END COMPONENT;
+	COMPONENT Psr
+	PORT(
+		nzvc : IN std_logic_vector(3 downto 0);
+		reset : IN std_logic;
+		clk : IN std_logic;          
+		carry : OUT std_logic
+		);
+	END COMPONENT;	
 	
 signal SumadorToNpc, nPcToPc, pcToIm, imToURs, aluResult1, RFtoAlu, RFtoMux, SeuToMux, MuxToAlu :STD_LOGIC_VECTOR (31 downto 0);
 signal aluop1:STD_LOGIC_VECTOR (5 downto 0);
+signal psrToalu: STD_LOGIC;--creo senals de 1
+signal psrmodifier_psr: STD_LOGIC_VECTOR(3 downto 0);--creo senals de 4
+
 begin
 
 Inst_Sumador: Sumador PORT MAP(
@@ -186,9 +204,24 @@ Inst_Sumador: Sumador PORT MAP(
 		Entrada_Uc => aluop1,
 		Entrada_rF1 => MuxToAlu,
 		Entrada_rF2 => RFtoAlu,
+		Carry => psrToalu,
 		dwr_aLu => aluResult1
 	);
-
+	Inst_PSR_Modifirer: PSR_Modifirer PORT MAP(
+		alu_op => aluop1 ,
+		alu_Resultado => aluResult1,
+		reset => reset ,
+		P_Crs1 =>RFtoAlu ,
+		P_Crs2 =>MuxToAlu ,
+		nzvc => psrmodifier_psr
+	);
+	Inst_Psr: Psr PORT MAP(
+		nzvc =>psrmodifier_psr ,
+		reset => reset,
+		clk => clk,
+		carry => psrToalu
+	);
+	
 Resultado_Procesador2 <= aluResult1;
 	
 	

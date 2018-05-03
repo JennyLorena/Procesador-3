@@ -19,6 +19,7 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -33,6 +34,8 @@ entity UnidadControl is
     Port ( op : in  STD_LOGIC_VECTOR (1 downto 0);
            op3 : in  STD_LOGIC_VECTOR (5 downto 0);
            salida_UC : out  STD_LOGIC_VECTOR (5 downto 0));
+			 
+			  
 end UnidadControl;
 
 architecture Behavioral of UnidadControl is
@@ -44,32 +47,69 @@ if (op="10")then
 			       
 					 case op3 is 
 				
-							when "000000" => -- ADD
-								salida_UC  <= "000001";
-
-							when "000100" => -- SUB
-								 salida_UC <= "000010";
-								 
-							when "000001" => -- AND
-								salida_UC <= "000011";
-								 
-							when "000101" => -- ANDN
-								salida_UC <= "000100";
-								 
-							when "000010" => -- OR
-								salida_UC <= "000101";
 								
-							when "000110" => -- ORN
-								salida_UC <= "000110";
-								 
-							when "000011" => -- XOR
-								salida_UC  <= "000111"; 
-								
-							when "000111" => -- XORN
-								salida_UC <= "001000";
-							when others => 
-								salida_UC <= "111111"; 
+										when "000000" => -- ADD
+										salida_UC <= "000000";
+											
+										when "010000" => -- ADDcc
+										salida_UC  <= "010000";
+											
+										when "001000" => -- ADDX
+										salida_UC  <= "001000";
+										
+										when "011000" => -- ADDXcc
+										salida_UC  <= "011000";
 
+										when "000100" => -- SUB
+										salida_UC <= "000100";
+									 
+										when "010100" => -- SUBcc
+									   salida_UC <= "010100";	
+											 
+										when "001100" => -- SUBX
+										salida_UC <= "001100";	
+										
+										when "011100" => -- SUBXcc
+										salida_UC <= "011100";							
+											 
+										when "000001" => -- AND
+										salida_UC <= "000001";
+											 
+										when "000101" => -- ANDN
+										salida_UC <= "000101";
+										
+										when "010101" => -- ANDNcc
+										salida_UC <= "010101";
+											 
+										when "010001" => -- ANDcc
+										salida_UC <= "010001";							
+											 
+										when "000010" => -- OR
+										salida_UC <= "000010";
+											
+										when "000110" => -- ORN
+										salida_UC <= "000110";
+											
+										when "010010" => -- ORcc
+										salida_UC <= "010010";
+											
+										when "010110" => -- ORNcc
+										salida_UC <= "010110";	
+											 
+										when "000011" => -- XOR
+										salida_UC  <= "000011"; 
+											
+										when "000111" => -- XNOR
+										salida_UC <= "000111";
+										
+										when "010011" => -- XORcc
+										salida_UC  <= "010011"; 
+											
+										when "010111" => -- XNORcc
+										salida_UC <= "010111";	
+											
+										when others => --otras instrucciones
+										salida_UC <= "111111"; 
 						end case;
 						 
 		end if; 
